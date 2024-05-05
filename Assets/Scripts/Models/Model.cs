@@ -16,6 +16,11 @@ public class Model : MonoBehaviour
     private float horizontalInput;
     private Dictionary<Vector2Int, bool> mapCollisions; // Simplified for example purposes
 
+    // Attack related
+    // private GameObject attackArea = default;
+    // private bool attacking = false;
+    // private float timeToAttack = 0.5f;
+
     void Awake()
     {
         mapCollisions = new Dictionary<Vector2Int, bool>(); // Populate with map collisions
@@ -89,13 +94,17 @@ public class Model : MonoBehaviour
 
     public void UserClickedAttackKey()
     {
-        // Attack logic here
+        // if (!isAttacking)
+        // {
+        //     Attack();
+        // }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isJumping = false;
     }
+
 
     public void EndGame()
     {
