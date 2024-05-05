@@ -1,37 +1,34 @@
-using UnityEngine;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UnityEngine;
 
 public class Model : MonoBehaviour
 {
     public event System.Action GameLoaded;
-    public event System.Action<Vector2Int> CharacterPositionChanged;
+    public event System.Action<Vector2> CharacterPositionChanged;
     public event System.Action EffectsApplied;
     public event System.Action GameEnded;
 
     public Rigidbody2D rb;
-    private Vector2Int characterPos;
     public float moveSpeed = 10f;
-    public float jumpPower = 30f;
-    public float stopSpeed = 5f;
+    public int jumpPower;
+    public float stopSpeed = 2f; // The factor of deceleration
     private bool isJumping = false;
     private float horizontalInput;
-    private Camera camera;
     private Dictionary<Vector2Int, bool> mapCollisions; // Simplified for example purposes
-    
+
     void Awake()
     {
-        characterPos = new Vector2Int(0, 0);
         mapCollisions = new Dictionary<Vector2Int, bool>(); // Populate with map collisions
         rb = GetComponent<Rigidbody2D>();
-        camera = Camera.main;
+        rb.gravityScale = 4;
+        jumpPower = 24;
     }
 
     public void StartGame()
     {
         LoadResources();
         SetupInitialState();
-        GameLoaded?.Invoke(); 
+        GameLoaded?.Invoke();
     }
 
     void LoadResources()
@@ -50,23 +47,34 @@ public class Model : MonoBehaviour
     {
         this.horizontalInput = horizontalInput;
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
-        CharacterPositionChanged?.Invoke(Vector2Int.FloorToInt(rb.position));
+        CharacterPositionChanged?.Invoke(rb.position);
     }
 
     public void UserClickedJumpKey()
     {
-        if(!isJumping)
+        if (!isJumping)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             isJumping = true;
-            CharacterPositionChanged?.Invoke(Vector2Int.FloorToInt(rb.position));
+            CharacterPositionChanged?.Invoke(rb.position);
         }
     }
-    
-    public void Update()
+
+    void Update()
     {
-        UnityEngine.Debug.Log(horizontalInput);
+        if (Mathf.Abs(horizontalInput) > 0.01) // Only update if input is significant
+        {
+            // Exponential decay for smooth stopping
+            horizontalInput *= Mathf.Pow(0.5f, Time.deltaTime * stopSpeed);
+        }
+        else
+        {
+            horizontalInput = 0; // Zero out the input to prevent drift
+        }
+        CharacterPositionChanged?.Invoke(rb.position);
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+
+        CharacterPositionChanged?.Invoke(rb.position);
     }
 
     bool VerifyMovementCollision(Vector2Int pos)
@@ -81,7 +89,6 @@ public class Model : MonoBehaviour
 
     public void UserClickedAttackKey()
     {
-
         // Attack logic here
     }
 
