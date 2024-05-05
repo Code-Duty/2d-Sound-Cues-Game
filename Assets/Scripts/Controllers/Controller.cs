@@ -46,7 +46,7 @@ public class Controller : MonoBehaviour
         {
             model.UserClickedJumpKey();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             model.UserClickedAttackKey();
