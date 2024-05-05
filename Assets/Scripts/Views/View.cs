@@ -1,5 +1,7 @@
-using UnityEngine;
+using System;
 
+using UnityEngine;
+using UnityEngine.SceneManagement;
 public class View : MonoBehaviour
 {
     Camera cam;
@@ -14,23 +16,17 @@ public class View : MonoBehaviour
 
     public void ShowMainMenu()
     {
-        UnityEngine.Debug.Log("Menu Shown");
-        
-    }
-
-    void Update()
-    {
-
+        //SceneManager.LoadScene("MainMenuScene");
     }
 
     void UpdateCameraPos(Vector2 pos)
     {
-        UnityEngine.Debug.Log(pos);
         cam.transform.position = new Vector3(pos.x, pos.y, -50);
     }
+
     void OnGameLoaded()
     {
-        LoadGraphics();
+        SceneManager.LoadScene("TestScene");
     }
 
     void LoadGraphics()
@@ -48,18 +44,20 @@ public class View : MonoBehaviour
         // Play effects like sounds, animations, etc.
     }
 
-    void OnGameEnded()
+    void OnGameEnded(int gameResult)
     {
-        DisplayEndScreen();
+        DisplayEndScreen(gameResult);
     }
 
-    void UpdateGameDisplay(Vector2Int position)
+    void DisplayEndScreen(int gameResult)
     {
-        // Update the game's display based on the position
-    }
-
-    void DisplayEndScreen()
-    {
-        // Show end game screen
+        if (gameResult == 1)
+        {
+            SceneManager.LoadScene("GameOverScene");
+        } 
+        else
+        {
+            SceneManager.LoadScene("MissionSuccessfulScene");
+        }
     }
 }
