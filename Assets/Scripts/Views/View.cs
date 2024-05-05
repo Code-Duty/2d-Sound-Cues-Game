@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using UnityEngine;
-using static System.Net.Mime.MediaTypeNames;
 
 public class View : MonoBehaviour
 {

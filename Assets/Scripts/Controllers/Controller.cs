@@ -36,16 +36,20 @@ public class Controller : MonoBehaviour
     void HandleInput()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
 
-        if (verticalInput > 0 && (horizontalInput == 0 || Mathf.Abs(horizontalInput) < Mathf.Abs(verticalInput)))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            Vector2 moveDirection = new Vector2(0, verticalInput);
-            model.UserClickedMovementKey(moveDirection.normalized);
+            model.UserClickedMovementKey(horizontalInput);
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            model.UserClickedJumpKey();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             model.UserClickedAttackKey();
-    }
+        }
     }
 }

@@ -12,6 +12,10 @@ public class Model : MonoBehaviour
     public Rigidbody2D rb;
     private Vector2Int characterPos;
     public float moveSpeed = 10f;
+    public float jumpPower = 30f;
+    public float stopSpeed = 5f;
+    private bool isJumping = false;
+    private float horizontalInput;
     private Camera camera;
     private Dictionary<Vector2Int, bool> mapCollisions; // Simplified for example purposes
     
@@ -42,10 +46,27 @@ public class Model : MonoBehaviour
         // Initial setup of the game state
     }
 
-    public void UserClickedMovementKey(Vector2 moveDirection)
+    public void UserClickedMovementKey(float horizontalInput)
     {
-        rb.velocity = moveDirection * moveSpeed;
+        this.horizontalInput = horizontalInput;
+        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
         CharacterPositionChanged?.Invoke(Vector2Int.FloorToInt(rb.position));
+    }
+
+    public void UserClickedJumpKey()
+    {
+        if(!isJumping)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            isJumping = true;
+            CharacterPositionChanged?.Invoke(Vector2Int.FloorToInt(rb.position));
+        }
+    }
+    
+    public void Update()
+    {
+        UnityEngine.Debug.Log(horizontalInput);
+        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
     }
 
     bool VerifyMovementCollision(Vector2Int pos)
@@ -62,6 +83,11 @@ public class Model : MonoBehaviour
     {
 
         // Attack logic here
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isJumping = false;
     }
 
     public void EndGame()
