@@ -11,22 +11,25 @@ public class Model : MonoBehaviour
     public Rigidbody2D rb;
     public float moveSpeed = 10f;
     public int jumpPower;
-    public float stopSpeed = 2f; // The factor of deceleration
+    public float stopSpeed = 2f;
     private bool isJumping = false;
     private float horizontalInput;
     private Dictionary<Vector2Int, bool> mapCollisions; // Simplified for example purposes
+    public Animator PlayerAnimator;
 
-    // Attack related
-    // private GameObject attackArea = default;
-    // private bool attacking = false;
-    // private float timeToAttack = 0.5f;
+    public PlayerAttack PlayerAttack;
 
     void Awake()
     {
         mapCollisions = new Dictionary<Vector2Int, bool>(); // Populate with map collisions
         rb = GetComponent<Rigidbody2D>();
+        //  Added this here, check later if according to MVM
+        PlayerAnimator = GetComponent<Animator>();
         rb.gravityScale = 4;
         jumpPower = 24;
+
+        PlayerAttack = GetComponent<PlayerAttack>();
+
     }
 
     public void StartGame()
@@ -59,6 +62,7 @@ public class Model : MonoBehaviour
     {
         if (!isJumping)
         {
+            PlayerAnimator.SetBool("is_jumping", true);
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             isJumping = true;
             CharacterPositionChanged?.Invoke(rb.position);
@@ -94,15 +98,14 @@ public class Model : MonoBehaviour
 
     public void UserClickedAttackKey()
     {
-        // if (!isAttacking)
-        // {
-        //     Attack();
-        // }
+        PlayerAttack.ShootProjectile();
+        PlayerAnimator.SetBool("is_shooting", true);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isJumping = false;
+        PlayerAnimator.SetBool("is_jumping", false);
     }
 
 

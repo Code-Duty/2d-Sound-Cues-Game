@@ -11,7 +11,6 @@ public class Controller : MonoBehaviour
         // Assuming Model and View are attached to the same GameObject or properly linked
         model = GetComponent<Model>();
         view = GetComponent<View>();
-
         view.Initialize(model);
 
         StartProgram();

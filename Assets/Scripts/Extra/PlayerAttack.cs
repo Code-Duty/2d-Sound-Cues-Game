@@ -8,17 +8,7 @@ public class PlayerAttack : MonoBehaviour
     public Transform ShootingPoint;
     public float ShootingForce = 1000f;
     public float ShootingTime = 0.5f;
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ShootProjectile();
-        }
-    }
-
-    void ShootProjectile()
+    public void ShootProjectile()
     {
         if (AttackSphere && ShootingPoint)
         {
@@ -27,7 +17,7 @@ public class PlayerAttack : MonoBehaviour
             Rigidbody2D my_body = my_projetile.GetComponent<Rigidbody2D>();
             if (my_body)
             {
-                Debug.LogError(ShootingPoint.right);
+                //Debug.LogError(ShootingPoint.right);
                 my_body.AddForce(ShootingPoint.right * ShootingForce);
             }
             else
