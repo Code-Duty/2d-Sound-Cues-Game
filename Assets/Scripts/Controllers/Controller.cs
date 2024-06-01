@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
@@ -18,12 +20,24 @@ public class Controller : MonoBehaviour
 
     void StartProgram()
     {
-        view.ShowMainMenu();
-        this.ClickStartGameButton();
+        try
+        {
+            view.ShowMainMenu();
+            //Currently not working, fix to be applied
+            //Button startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
+            //startGameButton.onClick.AddListener(ClickStartGameButton);
+            //UnityEngine.Debug.Log(startGameButton.ToString());
+            ClickStartGameButton();
+        }
+        catch (Exception ex)
+        {
+            UnityEngine.Debug.LogException(ex);
+        }
     }
 
-    void ClickStartGameButton()
+    public void ClickStartGameButton()
     {
+        UnityEngine.Debug.Log("startGameButton");
         model.StartGame();
     }
 
@@ -45,7 +59,7 @@ public class Controller : MonoBehaviour
         {
             model.UserClickedJumpKey();
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             model.UserClickedAttackKey();

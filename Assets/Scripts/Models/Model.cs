@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Model : MonoBehaviour
@@ -6,7 +8,9 @@ public class Model : MonoBehaviour
     public event System.Action GameLoaded;
     public event System.Action<Vector2> CharacterPositionChanged;
     public event System.Action EffectsApplied;
-    public event System.Action GameEnded;
+    public event System.Action<int> GameEnded;
+
+    private int playerHealth = 100;
 
     public Rigidbody2D rb;
     public float moveSpeed = 10f;
@@ -14,6 +18,7 @@ public class Model : MonoBehaviour
     public float stopSpeed = 2f;
     private bool isJumping = false;
     private float horizontalInput;
+    private bool arrivedEndGoal = false;
     private Dictionary<Vector2Int, bool> mapCollisions; // Simplified for example purposes
     public Animator PlayerAnimator;
 
@@ -71,6 +76,13 @@ public class Model : MonoBehaviour
 
     void Update()
     {
+        int gameResult = VerifyEndingCondition();
+
+        if (gameResult > 0)
+        {
+            EndGame(gameResult);
+        }
+
         if (Mathf.Abs(horizontalInput) > 0.01) // Only update if input is significant
         {
             // Exponential decay for smooth stopping
@@ -86,7 +98,7 @@ public class Model : MonoBehaviour
         CharacterPositionChanged?.Invoke(rb.position);
     }
 
-    bool VerifyMovementCollision(Vector2Int pos)
+    public int VerifyEndingCondition()
     {
         if (mapCollisions.ContainsKey(pos) && mapCollisions[pos] == false)
         {
@@ -100,6 +112,13 @@ public class Model : MonoBehaviour
     {
         PlayerAttack.ShootProjectile();
         PlayerAnimator.SetBool("is_shooting", true);
+        // Attack logic here
+    }
+
+    private void killPlayer()
+    {
+        playerHealth = 0;
+        EffectsApplied();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -111,6 +130,7 @@ public class Model : MonoBehaviour
 
     public void EndGame()
     {
-        GameEnded?.Invoke();
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        GameEnded?.Invoke(gameResult);
     }
 }
