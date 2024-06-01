@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +6,7 @@ public class Controller : MonoBehaviour
 {
     public Model model;
     public View view;
+    private IAudioManager audioManager;
 
     void Start()
     {
@@ -14,6 +14,8 @@ public class Controller : MonoBehaviour
         model = GetComponent<Model>();
         view = GetComponent<View>();
         view.Initialize(model);
+
+        audioManager = FindObjectOfType<AudioManager>();
 
         StartProgram();
     }
@@ -23,10 +25,10 @@ public class Controller : MonoBehaviour
         try
         {
             view.ShowMainMenu();
-            //Currently not working, fix to be applied
-            //Button startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
-            //startGameButton.onClick.AddListener(ClickStartGameButton);
-            //UnityEngine.Debug.Log(startGameButton.ToString());
+            // Currently not working, fix to be applied
+            // Button startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
+            // startGameButton.onClick.AddListener(ClickStartGameButton);
+            // UnityEngine.Debug.Log(startGameButton.ToString());
             ClickStartGameButton();
         }
         catch (Exception ex)
@@ -39,6 +41,7 @@ public class Controller : MonoBehaviour
     {
         UnityEngine.Debug.Log("startGameButton");
         model.StartGame();
+        audioManager.PlaySound("game_start");
     }
 
     void Update()
@@ -53,16 +56,19 @@ public class Controller : MonoBehaviour
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
             model.UserClickedMovementKey(horizontalInput);
+            audioManager.PlaySound("footstep");
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
             model.UserClickedJumpKey();
+            audioManager.PlaySound("jump");
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             model.UserClickedAttackKey();
+            audioManager.PlaySound("attack");
         }
     }
 }

@@ -24,17 +24,19 @@ public class Model : MonoBehaviour
 
     public PlayerAttack PlayerAttack;
 
+    private IAudioManager audioManager;
+
     void Awake()
     {
         mapCollisions = new Dictionary<Vector2Int, bool>(); // Populate with map collisions
         rb = GetComponent<Rigidbody2D>();
-        //  Added this here, check later if according to MVM
         PlayerAnimator = GetComponent<Animator>();
         rb.gravityScale = 4;
         jumpPower = 24;
 
         PlayerAttack = GetComponent<PlayerAttack>();
 
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     public void StartGame()
@@ -42,6 +44,7 @@ public class Model : MonoBehaviour
         LoadResources();
         SetupInitialState();
         GameLoaded?.Invoke();
+        audioManager.PlaySound("game_start");
     }
 
     void LoadResources()
@@ -61,6 +64,7 @@ public class Model : MonoBehaviour
         this.horizontalInput = horizontalInput;
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
         CharacterPositionChanged?.Invoke(rb.position);
+        audioManager.PlaySound("footstep");
     }
 
     public void UserClickedJumpKey()
@@ -71,6 +75,7 @@ public class Model : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             isJumping = true;
             CharacterPositionChanged?.Invoke(rb.position);
+            audioManager.PlaySound("jump");
         }
     }
 
@@ -100,37 +105,44 @@ public class Model : MonoBehaviour
 
     public int VerifyEndingCondition()
     {
-        if (mapCollisions.ContainsKey(pos) && mapCollisions[pos] == false)
-        {
-            EffectsApplied?.Invoke();
-            return false;
-        }
-        return true;
+        if (playerHealth == 0)
+            return 1;
+
+        if (arrivedEndGoal)
+            return 2;
+        else
+            return 0;
     }
 
     public void UserClickedAttackKey()
     {
         PlayerAttack.ShootProjectile();
         PlayerAnimator.SetBool("is_shooting", true);
-        // Attack logic here
+        audioManager.PlaySound("attack");
     }
 
     private void killPlayer()
     {
         playerHealth = 0;
         EffectsApplied();
+        audioManager.PlaySound("death");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isJumping = false;
         PlayerAnimator.SetBool("is_jumping", false);
+
+        if (collision.gameObject.CompareTag("Instakill"))
+        {
+            killPlayer();
+        }
     }
 
-
-    public void EndGame()
+    public void EndGame(int gameResult)
     {
         rb.constraints = RigidbodyConstraints2D.FreezePosition;
         GameEnded?.Invoke(gameResult);
+        audioManager.PlaySound("game_end");
     }
 }
