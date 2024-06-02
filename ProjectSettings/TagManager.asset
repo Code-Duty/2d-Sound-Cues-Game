@@ -4,7 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Instakill
+=======
+  - Foreground
+>>>>>>> dbae7a5dc882037a8e63599298dd7964bf128d8e
   layers:
   - Default
   - TransparentFX
