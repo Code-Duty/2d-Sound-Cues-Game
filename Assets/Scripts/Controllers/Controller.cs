@@ -1,8 +1,4 @@
 using System;
-<<<<<<< HEAD
-using System.Diagnostics;
-=======
->>>>>>> dbae7a5dc882037a8e63599298dd7964bf128d8e
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +9,9 @@ public class Controller : MonoBehaviour
     public Model model;
     public View view;
     private IAudioManager audioManager;
-    private IScoreManager scoreManager;
+    private IGameResult scoreManager;
     private IGameStateManager gameStateManager;
+
 
     void Start()
     {
@@ -24,8 +21,9 @@ public class Controller : MonoBehaviour
         view.Initialize(model);
 
         audioManager = FindObjectOfType<AudioManager>();
-        scoreManager = FindObjectOfType<ScoreManager>();
+        scoreManager = FindObjectOfType<GameResult>();
         gameStateManager = FindObjectOfType<GameStateManager>();
+
 
         // Redefine a pontuação e define o estado inicial do jogo
         scoreManager.ResetScore();
@@ -41,27 +39,11 @@ public class Controller : MonoBehaviour
         try
         {
             view.ShowMainMenu();
-<<<<<<< HEAD
-            //Currently not working, fix to be applied
-            //Button startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
-            //startGameButton.onClick.AddListener(ClickStartGameButton);
-            //UnityEngine.Debug.Log(startGameButton.ToString());
-=======
->>>>>>> dbae7a5dc882037a8e63599298dd7964bf128d8e
             ClickStartGameButton();
         }
         catch (Exception ex)
         {
-<<<<<<< HEAD
             UnityEngine.Debug.LogException(ex);
-        }
-    }
-
-    public void ClickStartGameButton()
-    {
-        UnityEngine.Debug.Log("startGameButton");
-=======
-            Debug.LogException(ex);
         }
     }
 
@@ -69,7 +51,6 @@ public class Controller : MonoBehaviour
     public void ClickStartGameButton()
     {
         Debug.Log("startGameButton");
->>>>>>> dbae7a5dc882037a8e63599298dd7964bf128d8e
         model.StartGame();
         audioManager.PlaySound("game_start");
         gameStateManager.SetState("InGame");
@@ -84,8 +65,8 @@ public class Controller : MonoBehaviour
     // Método para lidar com a entrada do usuário
     void HandleInput()
     {
-        if (gameStateManager.GetState() != "InGame")
-            return;
+        //if (gameStateManager.GetState() != "InGame")
+        //    return;
 
         float horizontalInput = Input.GetAxis("Horizontal");
 

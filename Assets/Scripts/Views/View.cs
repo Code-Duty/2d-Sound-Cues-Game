@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class View : MonoBehaviour
 {
     Camera cam;
+
     public void Initialize(Model model)
     {
         model.GameLoaded += OnGameLoaded;
@@ -42,19 +43,20 @@ public class View : MonoBehaviour
     void OnEffectsApplied()
     {
         // Play effects like sounds, animations, etc.
+        // Inverter  a sprite de Main 
     }
 
-    void OnGameEnded(int gameResult)
+    void OnGameEnded(IGameResult gameResult)
     {
         DisplayEndScreen(gameResult);
     }
 
-    void DisplayEndScreen(int gameResult)
+    void DisplayEndScreen(IGameResult gameResult)
     {
-        if (gameResult == 1)
+        if (gameResult.result == Result.Died)
         {
             SceneManager.LoadScene("GameOverScene");
-        } 
+        }
         else
         {
             SceneManager.LoadScene("MissionSuccessfulScene");
