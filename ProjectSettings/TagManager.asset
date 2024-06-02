@@ -5,14 +5,17 @@ TagManager:
   serializedVersion: 2
   tags:
   - Foreground
+  - Instakill
+  - Floor
+  - Background
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
-  - 
+  - Foreground
   - 
   - 
   - 
@@ -41,4 +44,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Foreground
+    uniqueID: 2970695419
     locked: 0

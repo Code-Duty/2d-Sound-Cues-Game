@@ -12,6 +12,7 @@ public class Controller : MonoBehaviour
     private IScoreManager scoreManager;
     private IGameStateManager gameStateManager;
 
+
     void Start()
     {
         // Inicializa os componentes
@@ -22,6 +23,7 @@ public class Controller : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         gameStateManager = FindObjectOfType<GameStateManager>();
+
 
         // Redefine a pontuação e define o estado inicial do jogo
         scoreManager.ResetScore();
@@ -63,8 +65,8 @@ public class Controller : MonoBehaviour
     // Método para lidar com a entrada do usuário
     void HandleInput()
     {
-        if (gameStateManager.GetState() != "InGame")
-            return;
+        //if (gameStateManager.GetState() != "InGame")
+        //    return;
 
         float horizontalInput = Input.GetAxis("Horizontal");
 

@@ -26,13 +26,14 @@ public class Model : MonoBehaviour
     private float horizontalInput;
     private bool arrivedEndGoal = false;
     private Dictionary<Vector2Int, bool> mapCollisions;
-    public Animator PlayerAnimator;
 
     public PlayerAttack PlayerAttack;
 
     private IAudioManager audioManager;
     private IScoreManager scoreManager;
     private IGameStateManager gameStateManager;
+
+    public Animator PlayerAnimator;
 
     void Awake()
     {
@@ -43,7 +44,6 @@ public class Model : MonoBehaviour
         jumpPower = 24;
 
         PlayerAttack = GetComponent<PlayerAttack>();
-
         audioManager = FindObjectOfType<AudioManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         gameStateManager = FindObjectOfType<GameStateManager>();
@@ -79,7 +79,12 @@ public class Model : MonoBehaviour
         this.horizontalInput = horizontalInput;
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
         CharacterPositionChanged?.Invoke(rb.position);
+        PlayerAnimator.SetBool("is_moving", true);
         audioManager.PlaySound("footstep");
+
+
+
+
     }
 
     // Método chamado quando a tecla de pulo é pressionada
@@ -113,11 +118,28 @@ public class Model : MonoBehaviour
         else
         {
             horizontalInput = 0; // Zera a entrada para evitar deriva
+            PlayerAnimator.SetBool("is_moving", false);
         }
         CharacterPositionChanged?.Invoke(rb.position);
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 
         CharacterPositionChanged?.Invoke(rb.position);
+
+        AnimatorStateInfo stateInfo = PlayerAnimator.GetCurrentAnimatorStateInfo(0);
+
+        // verificar estado de animação, se animação acabou, mudar o estado
+        if (stateInfo.IsName("Main_still_shooting") && stateInfo.normalizedTime >= 1.0f)
+        {
+            PlayerAnimator.SetBool("is_shooting", false);
+        }
+
+
+        if (horizontalInput != 0)
+        {
+            transform.localScale = new Vector2(Mathf.Sign(horizontalInput) * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        }
+
+
     }
 
     // Método para verificar a condição de fim do jogo

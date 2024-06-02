@@ -42,6 +42,7 @@ public class View : MonoBehaviour
     void OnEffectsApplied()
     {
         // Play effects like sounds, animations, etc.
+        // Inverter  a sprite de Main 
     }
 
     void OnGameEnded(int gameResult)
@@ -54,7 +55,7 @@ public class View : MonoBehaviour
         if (gameResult == 1)
         {
             SceneManager.LoadScene("GameOverScene");
-        } 
+        }
         else
         {
             SceneManager.LoadScene("MissionSuccessfulScene");
