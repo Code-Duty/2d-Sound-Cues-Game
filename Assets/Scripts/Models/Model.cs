@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 // Classe Model que gera o estado do jogo
 public class Model : MonoBehaviour
 {
     // Eventos para notificar mudanças no estado do jogo
-    public event System.Action GameLoaded;
-    public event System.Action<Vector2> CharacterPositionChanged;
-    public event System.Action EffectsApplied;
-    public event System.Action<int> GameEnded;
+    public event Action GameLoaded;
+    public event Action<Vector2> CharacterPositionChanged;
+    public event Action EffectsApplied;
+    public event Action<int> GameEnded;
 
     // Atributos do jogador
     private int playerHealth = 100;
@@ -63,14 +62,14 @@ public class Model : MonoBehaviour
     // Método para carregar recursos
     void LoadResources()
     {
-        UnityEngine.Debug.Log("Load Resources");
+        Debug.Log("Load Resources");
         // Carrega recursos como texturas, modelos, sons, etc.
     }
 
     // Método para configurar o estado inicial do jogo
     void SetupInitialState()
     {
-        UnityEngine.Debug.Log("Setup Initial State");
+        Debug.Log("Setup Initial State");
         // Configuração inicial do estado do jogo
     }
 
